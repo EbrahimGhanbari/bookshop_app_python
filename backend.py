@@ -28,16 +28,33 @@ def drop():
     conn.commit()
     conn.close()
 
-def search(title, author, year, isbn):
+def search(title="", author="", year="", isbn=""):
     conn=sqlite3.connect("books.db")
     cur=conn.cursor()
-    cur.execute("SELECT * FROM books WHERE title=? OR author=? or year=? OR isbn=?")
+    cur.execute("SELECT * FROM books WHERE title=? OR author=? or year=? OR isbn=?", (title, author, year, isbn))
     rows=cur.fetchall()
     conn.close()
     return rows
 
+def delete(id):
+    conn=sqlite3.connect("books.db")
+    cur=conn.cursor()
+    cur.execute("DELETE FROM books WHERE id=?", (id, ))
+    conn.commit()
+    conn.close()
+
+def update(id, title, author, year, isbn):
+    conn=sqlite3.connect("books.db")
+    cur=conn.cursor()
+    cur.execute("UPDATE books SET title=?, author=?, year=?, isbn=? WHERE id=?", (title, author, year, isbn, id))
+    conn.commit()
+    conn.close()
+
 
 
 connect()
-insert("The sea", "John Dick", 1989, 13824614)
+# insert("The earth", "John smith", 1989, 13824614)
+# print(search(author="John smith"))
+delete(3)
+update(1, "The moon", "Dicken Club", 1917, 6105715)
 print(view())
